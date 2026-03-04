@@ -1,0 +1,19 @@
+# EBS-backed StorageClass using the gp3 volume type.
+# After applying Terraform, apply this once with: kubectl apply -f k8s/storageclass.yaml
+#
+# The EBS CSI driver add-on handles dynamic provisioning; a PVC referencing
+# this class will automatically create and attach an EBS volume.
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ebs-gp3
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer   # Provisions in the same AZ as the pod
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+parameters:
+  type: gp3
+  encrypted: "true"

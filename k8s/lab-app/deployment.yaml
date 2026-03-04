@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-lab-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: k8s-lab-app
+  template:
+    metadata:
+      labels:
+        app: k8s-lab-app
+    spec:
+      imagePullSecrets:
+        - name: ghcr-elgulfsurfer
+      containers:
+        - name: k8s-lab-app
+          image: ghcr.io/elgulfsurfer/kubernetes-lab:0.1.1
+          # You will want to change this tag to a specific version ^^^^
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+                path: / 
+                port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+                path: /
+                port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
