@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}{{ spot.name }} — SurfLog{% endblock %}
+{% block content %}
+<div class="page-header">
+  <a href="{{ url_for('home') }}" class="back">← Spots</a>
+  <h2>{{ spot.name }}</h2>
+</div>
+
+<div class="dashboard-grid">
+
+  <!-- Current conditions -->
+  <section class="card">
+    <h3>Current Conditions</h3>
+    {% if buoy_history %}
+      {% set c = buoy_history[0] %}
+      <div class="conditions-large">
+        <div class="stat">
+          <span class="stat-value">{% if c.wave_height %}{{ c.wave_height }}m{% else %}—{% endif %}</span>
+          <span class="stat-label">Wave Height</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">{% if c.wave_period %}{{ c.wave_period }}s{% else %}—{% endif %}</span>
+          <span class="stat-label">Period</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">{% if c.wave_direction %}{{ c.wave_direction }}°{% else %}—{% endif %}</span>
+          <span class="stat-label">Direction</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">{% if c.water_temp %}{{ c.water_temp }}°C{% else %}—{% endif %}</span>
+          <span class="stat-label">Water Temp</span>
+        </div>
+      </div>
+      <p class="data-date">{{ c.date }}</p>
+    {% else %}
+      <p class="empty">No buoy data available.</p>
+    {% endif %}
+  </section>
+
+  <!-- Wave height chart (last 6 days) -->
+  <section class="card">
+    <h3>Wave Height — Last 7 Days</h3>
+    {% if buoy_history %}
+      <div class="bar-chart">
+        {% for day in buoy_history | reverse %}
+          <div class="bar-col">
+            <div class="bar-wrap">
+              <div class="bar"
+                   style="height: {{ ((day.wave_height or 0) / 5 * 100) | int }}%"
+                   title="{{ day.wave_height or 0 }}m">
+              </div>
+            </div>
+            <span class="bar-label">{{ day.date[-5:] }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="empty">No data.</p>
+    {% endif %}
+  </section>
+
+</div>
+
+<!-- Recent sessions -->
+<section class="card mt">
+  <div class="section-header">
+    <h3>Recent Sessions</h3>
+    <a href="{{ url_for('log_add') }}" class="btn-sm">+ Add Log</a>
+  </div>
+  {% if logs %}
+    <table class="log-table">
+      <thead>
+        <tr>
+          <th>Date</th><th>Quality</th><th>Fun</th><th>Board</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for l in logs %}
+        <tr class="clickable" data-href="{{ url_for('log_detail', log_id=l.id) }}">
+          <td>{{ l.date }}</td>
+          <td>{{ l.quality }}/10</td>
+          <td>{{ l.fun }}/10</td>
+          <td>{{ l.board_name }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="empty">No sessions logged yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

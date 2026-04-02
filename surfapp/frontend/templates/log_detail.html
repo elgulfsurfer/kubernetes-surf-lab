@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Log — SurfLog{% endblock %}
+{% block content %}
+<div class="page-header">
+  <a href="{{ url_for('logs') }}" class="back">← Logs</a>
+  <h2>{{ log.name or log.date }}</h2>
+</div>
+
+<div class="detail-card">
+  <div class="detail-grid">
+    <div><span class="label">Spot</span><span>{{ log.spot_name }}</span></div>
+    <div><span class="label">Date</span><span>{{ log.date }}</span></div>
+    <div><span class="label">Time</span><span>{{ log.start_time }} – {{ log.end_time }}</span></div>
+    <div><span class="label">Board</span><span>{{ log.board_name }}</span></div>
+    <div><span class="label">Forecaster</span><span>{{ log.forecaster }}</span></div>
+    <div><span class="label">Forecast Accuracy</span><span>{{ log.forecaster_accuracy }}/10</span></div>
+    <div><span class="label">Session Quality</span><span>{{ log.quality }}/10</span></div>
+    <div><span class="label">Fun</span><span>{{ log.fun }}/10</span></div>
+    <div><span class="label">Crowd</span><span>{{ log.crowd_level }}/5</span></div>
+    <div><span class="label">Board Feel</span><span>{{ log.board_quality }}/10</span></div>
+  </div>
+  <div class="description">
+    <span class="label">Notes</span>
+    <p>{{ log.description }}</p>
+  </div>
+</div>
+
+<div class="danger-zone">
+  <h4>Delete this log</h4>
+  <form method="POST" action="{{ url_for('log_delete', log_id=log.id) }}" class="delete-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <input type="text" name="confirm" placeholder='Type "delete" to confirm' autocomplete="off" />
+    <button type="submit" class="btn-danger" data-delete-btn>Delete</button>
+  </form>
+</div>
+{% endblock %}

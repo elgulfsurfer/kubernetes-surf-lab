@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Add Board — SurfLog{% endblock %}
+{% block content %}
+<div class="page-header">
+  <a href="{{ url_for('boards') }}" class="back">← Boards</a>
+  <h2>Add Board</h2>
+</div>
+
+{% if errors %}
+  <div class="error-list">
+    {% for e in errors %}<p>{{ e }}</p>{% endfor %}
+  </div>
+{% endif %}
+
+<form method="POST" class="form-card">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+  <div class="form-row">
+    <label>Name *
+      <input type="text" name="name" value="{{ form.get('name', '') }}" required />
+    </label>
+    <label>Brand
+      <input type="text" name="brand" value="{{ form.get('brand', '') }}" />
+    </label>
+  </div>
+  <div class="form-row">
+    <label>Model
+      <input type="text" name="model" value="{{ form.get('model', '') }}" />
+    </label>
+    <label>Type *
+      <select name="type" required>
+        {% for t in board_types %}
+          <option value="{{ t }}" {% if form.get('type') == t %}selected{% endif %}>{{ t }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </div>
+  <div class="form-row">
+    <label>Fin Setup *
+      <select name="fin_setup" required>
+        {% for f in fin_setups %}
+          <option value="{{ f }}" {% if form.get('fin_setup') == f %}selected{% endif %}>{{ f }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </div>
+  <div class="form-row dims">
+    <label>Length (inches) *
+      <input type="number" name="length" step="0.01" min="0"
+             value="{{ form.get('length', '') }}" required />
+    </label>
+    <label>Width (inches) *
+      <input type="number" name="width" step="0.01" min="0"
+             value="{{ form.get('width', '') }}" required />
+    </label>
+    <label>Thickness (inches) *
+      <input type="number" name="height" step="0.01" min="0"
+             value="{{ form.get('height', '') }}" required />
+    </label>
+    <label>Volume (L)
+      <input type="number" name="volume" step="0.01" min="0"
+             value="{{ form.get('volume', '') }}" />
+    </label>
+  </div>
+  <label>Description
+    <textarea name="description" rows="3"
+              data-counter="desc-counter">{{ form.get('description', '') }}</textarea>
+    <span id="desc-counter" class="char-counter">{{ form.get('description', '')|length }}/200</span>
+  </label>
+
+  <button type="submit">Save Board</button>
+</form>
+{% endblock %}

@@ -31,6 +31,7 @@ resource "aws_eks_node_group" "main" {
   cluster_name    = aws_eks_cluster.main.name
   node_group_name = "${var.cluster_name}-nodes"
   node_role_arn   = aws_iam_role.node_group.arn
+  version         = var.cluster_version
 
   # Nodes in private subnets; internet traffic exits through NAT gateways
   subnet_ids = aws_subnet.private[*].id

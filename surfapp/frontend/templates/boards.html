@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Boards — SurfLog{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>Boards</h2>
+  {% if boards|length < 10 %}
+    <a href="{{ url_for('board_add') }}" class="btn">+ Add Board</a>
+  {% else %}
+    <span class="muted">Max 10 boards reached</span>
+  {% endif %}
+</div>
+
+{% if not boards %}
+  <p class="empty">No boards yet.</p>
+{% else %}
+  <div class="board-grid">
+    {% for b in boards %}
+    <a href="{{ url_for('board_detail', board_id=b.id) }}" class="board-card">
+      <h3>{{ b.name }}</h3>
+      <p class="board-sub">{{ b.type }} · {{ b.fin_setup }}</p>
+      <p class="board-dims">{{ b.length }}" × {{ b.width }}" × {{ b.height }}"
+        {% if b.volume %}· {{ b.volume }}L{% endif %}
+      </p>
+      {% if b.brand or b.model %}
+        <p class="board-brand">{{ [b.brand, b.model] | select | join(' ') }}</p>
+      {% endif %}
+    </a>
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}

@@ -1,24 +1,67 @@
-# Terraform state — never commit these
+# ── Terraform ─────────────────────────────────────────────────────────────────
+# State files — managed remotely in S3, never commit locally
 *.tfstate
 *.tfstate.*
 *.tfstate.backup
 
-# Local variable overrides — may contain secrets
+# Variable files — may contain account IDs, ARNs, secrets
 *.tfvars
 !*.tfvars.example
 
-# Terraform working directory
+# Terraform working directory and plan output
 .terraform/
+*.tfplan
 
 # Crash logs
 crash.log
 crash.*.log
 
-# Provider binaries downloaded by terraform init
-*.tfplan
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
 
-# macOS
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ── Environment / secrets ─────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Docker ────────────────────────────────────────────────────────────────────
+# Local override files (may have real credentials)
+docker-compose.override.yml
+
+# ── Kubernetes ────────────────────────────────────────────────────────────────
+# Rendered secret manifests — use sealed-secrets or external-secrets in prod
+surfapp/k8s/secret.yaml
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
 .DS_Store
+.AppleDouble
+.LSOverride
 
-# Personal notes
+# ── Editor ────────────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ── Excluded project folders ──────────────────────────────────────────────────
+resume-app/
+k8s/
+app/
+terraform/
+
+# ── Personal ──────────────────────────────────────────────────────────────────
 chat.txt

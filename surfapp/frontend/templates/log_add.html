@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Add Log — SurfLog{% endblock %}
+{% block content %}
+<div class="page-header">
+  <a href="{{ url_for('logs') }}" class="back">← Logs</a>
+  <h2>Add Session Log</h2>
+</div>
+
+{% if errors %}
+  <div class="error-list">
+    {% for e in errors %}<p>{{ e }}</p>{% endfor %}
+  </div>
+{% endif %}
+
+{% if not boards %}
+  <div class="flash flash-error">You need to add a board before logging a session.</div>
+{% endif %}
+
+<form method="POST" class="form-card">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+  <div class="form-row">
+    <label>Spot
+      <select name="spot_id" required>
+        <option value="">— select —</option>
+        {% for s in spots %}
+          <option value="{{ s.id }}" {% if form.get('spot_id')|string == s.id|string %}selected{% endif %}>
+            {{ s.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Date
+      <input type="date" name="date" value="{{ form.get('date', '') }}" required />
+    </label>
+  </div>
+
+  <div class="form-row">
+    <label>Start Time
+      <input type="time" name="start_time" value="{{ form.get('start_time', '') }}" required />
+    </label>
+    <label>End Time
+      <input type="time" name="end_time" value="{{ form.get('end_time', '') }}" required />
+    </label>
+  </div>
+
+  <div class="form-row">
+    <label>Board
+      <select name="board_id" required {% if not boards %}disabled{% endif %}>
+        <option value="">— select —</option>
+        {% for b in boards %}
+          <option value="{{ b.id }}" {% if form.get('board_id')|string == b.id|string %}selected{% endif %}>
+            {{ b.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Session Name (optional)
+      <input type="text" name="name" value="{{ form.get('name', '') }}" />
+    </label>
+  </div>
+
+  <div class="form-row">
+    <label>Forecaster
+      <select name="forecaster" required>
+        {% for f in ['Surfline', 'SurfReport', 'Other'] %}
+          <option value="{{ f }}" {% if form.get('forecaster') == f %}selected{% endif %}>{{ f }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </div>
+
+  <div class="sliders">
+    <div class="slider-group">
+      <label>Forecaster Accuracy <span id="forecaster_accuracy-val">{{ form.get('forecaster_accuracy', 5) }}</span>/10</label>
+      <input type="range" name="forecaster_accuracy" min="1" max="10"
+             value="{{ form.get('forecaster_accuracy', 5) }}" data-output="forecaster_accuracy-val" />
+    </div>
+    <div class="slider-group">
+      <label>Session Quality <span id="quality-val">{{ form.get('quality', 5) }}</span>/10</label>
+      <input type="range" name="quality" min="1" max="10"
+             value="{{ form.get('quality', 5) }}" data-output="quality-val" />
+    </div>
+    <div class="slider-group">
+      <label>Fun <span id="fun-val">{{ form.get('fun', 5) }}</span>/10</label>
+      <input type="range" name="fun" min="1" max="10"
+             value="{{ form.get('fun', 5) }}" data-output="fun-val" />
+    </div>
+    <div class="slider-group">
+      <label>Board Feel <span id="board_quality-val">{{ form.get('board_quality', 5) }}</span>/10</label>
+      <input type="range" name="board_quality" min="1" max="10"
+             value="{{ form.get('board_quality', 5) }}" data-output="board_quality-val" />
+    </div>
+    <div class="slider-group">
+      <label>Crowd <span id="crowd_level-val">{{ form.get('crowd_level', 3) }}</span>/5</label>
+      <input type="range" name="crowd_level" min="1" max="5"
+             value="{{ form.get('crowd_level', 3) }}" data-output="crowd_level-val" />
+    </div>
+  </div>
+
+  <label>Description
+    <textarea name="description" rows="4" minlength="20" maxlength="200"
+              data-counter="desc-counter" required>{{ form.get('description', '') }}</textarea>
+    <span id="desc-counter" class="char-counter">{{ form.get('description', '')|length }}/200</span>
+  </label>
+
+  <button type="submit" {% if not boards %}disabled{% endif %}>Save Log</button>
+</form>
+{% endblock %}

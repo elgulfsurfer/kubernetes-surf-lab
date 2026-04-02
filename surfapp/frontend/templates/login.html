@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Login — SurfLog{% endblock %}
+{% block content %}
+<div class="auth-card">
+  <h1>SurfLog</h1>
+  <form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <label>Email
+      <input type="email" name="email" required autofocus />
+    </label>
+    <label>Password
+      <input type="password" name="password" required />
+    </label>
+    <button type="submit">Log in</button>
+  </form>
+</div>
+{% endblock %}

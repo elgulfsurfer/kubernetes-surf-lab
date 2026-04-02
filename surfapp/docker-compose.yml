@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB:       surflog
+      POSTGRES_USER:     surflog
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U surflog"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql://surflog:secret@db:5432/surflog
+      JWT_SECRET:   dev-jwt-secret
+      ADMIN_API_KEY: dev-admin-key
+    ports:
+      - "5001:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    environment:
+      BACKEND_URL:  http://backend:5000
+      FLASK_SECRET: dev-flask-secret
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ board.name }} — SurfLog{% endblock %}
+{% block content %}
+<div class="page-header">
+  <a href="{{ url_for('boards') }}" class="back">← Boards</a>
+  <h2>{{ board.name }}</h2>
+</div>
+
+<div class="detail-card">
+  <div class="detail-grid">
+    <div><span class="label">Type</span><span>{{ board.type }}</span></div>
+    <div><span class="label">Fin Setup</span><span>{{ board.fin_setup }}</span></div>
+    {% if board.brand %}<div><span class="label">Brand</span><span>{{ board.brand }}</span></div>{% endif %}
+    {% if board.model %}<div><span class="label">Model</span><span>{{ board.model }}</span></div>{% endif %}
+    <div><span class="label">Length</span><span>{{ board.length }}"</span></div>
+    <div><span class="label">Width</span><span>{{ board.width }}"</span></div>
+    <div><span class="label">Thickness</span><span>{{ board.height }}"</span></div>
+    {% if board.volume %}<div><span class="label">Volume</span><span>{{ board.volume }}L</span></div>{% endif %}
+  </div>
+  {% if board.description %}
+  <div class="description">
+    <span class="label">Notes</span>
+    <p>{{ board.description }}</p>
+  </div>
+  {% endif %}
+</div>
+
+<div class="danger-zone">
+  <h4>Delete this board</h4>
+  <p class="muted">Boards with session logs cannot be deleted.</p>
+  <form method="POST" action="{{ url_for('board_delete', board_id=board.id) }}" class="delete-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <input type="text" name="confirm" placeholder='Type "delete" to confirm' autocomplete="off" />
+    <button type="submit" class="btn-danger" data-delete-btn>Delete</button>
+  </form>
+</div>
+{% endblock %}

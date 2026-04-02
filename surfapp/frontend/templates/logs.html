@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Logs — SurfLog{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>Session Logs</h2>
+  <a href="{{ url_for('log_add') }}" class="btn">+ Add Log</a>
+</div>
+
+{% if not logs %}
+  <p class="empty">No sessions logged yet.</p>
+{% else %}
+  <table class="log-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Spot</th>
+        <th>Quality</th>
+        <th>Fun</th>
+        <th>Crowd</th>
+        <th>Board</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for l in logs %}
+      <tr class="clickable" data-href="{{ url_for('log_detail', log_id=l.id) }}">
+        <td>{{ l.date }}</td>
+        <td>{{ l.spot_name }}</td>
+        <td>{{ l.quality }}/10</td>
+        <td>{{ l.fun }}/10</td>
+        <td>{{ l.crowd_level }}/5</td>
+        <td>{{ l.board_name }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+{% endblock %}

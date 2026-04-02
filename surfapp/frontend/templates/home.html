@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Spots — SurfLog{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>Your Spots</h2>
+</div>
+
+{% if not spots %}
+  <p class="empty">No spots assigned yet.</p>
+{% else %}
+  <div class="spot-grid">
+    {% for spot in spots %}
+    <a href="{{ url_for('dashboard', spot_id=spot.id) }}" class="spot-card">
+      <h3>{{ spot.name }}</h3>
+      {% if spot.conditions %}
+        {% set c = spot.conditions %}
+        <div class="conditions">
+          <div class="condition-row">
+            <span class="label">Swell</span>
+            <span class="value">
+              {% if c.wave_height %}{{ c.wave_height }}m{% else %}—{% endif %}
+              {% if c.wave_period %}@ {{ c.wave_period }}s{% endif %}
+            </span>
+          </div>
+          <div class="condition-row">
+            <span class="label">Direction</span>
+            <span class="value">{% if c.wave_direction %}{{ c.wave_direction }}°{% else %}—{% endif %}</span>
+          </div>
+          <div class="condition-row">
+            <span class="label">Water</span>
+            <span class="value">{% if c.water_temp %}{{ c.water_temp }}°C{% else %}—{% endif %}</span>
+          </div>
+        </div>
+      {% else %}
+        <p class="no-data">No buoy data available</p>
+      {% endif %}
+      <div class="buoys">
+        {% for b in spot.buoys %}<span class="buoy-tag">{{ b.name }}</span>{% endfor %}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}
