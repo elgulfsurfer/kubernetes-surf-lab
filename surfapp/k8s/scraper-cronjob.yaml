@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: scraper
+  namespace: surflog
+spec:
+  schedule: "0 6 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          imagePullSecrets:
+            - name: surflog-registry
+          restartPolicy: OnFailure
+          containers:
+            - name: scraper
+              image: ghcr.io/elgulfsurfer/surflog-scraper:v1
+              env:
+                - name: BACKEND_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: surflog-config
+                      key: BACKEND_URL
+                - name: BUOY_STATIONS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: surflog-config
+                      key: BUOY_STATIONS
+                - name: ADMIN_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: surflog-secret
+                      key: ADMIN_API_KEY

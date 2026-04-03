@@ -284,6 +284,27 @@ def delete_log(log_id):
 
 # ── Admin endpoints ───────────────────────────────────────────────────────────
 
+@app.route("/admin/users", methods=["GET"])
+@require_admin
+def admin_list_users():
+    users = User.query.order_by(User.id).all()
+    return jsonify([{"id": u.id, "email": u.email, "created_at": u.created_at.isoformat()} for u in users])
+
+
+@app.route("/admin/buoys", methods=["GET"])
+@require_admin
+def admin_list_buoys():
+    buoys = Buoy.query.order_by(Buoy.id).all()
+    return jsonify([{"id": b.id, "station_id": b.station_id, "name": b.name} for b in buoys])
+
+
+@app.route("/admin/spots", methods=["GET"])
+@require_admin
+def admin_list_spots():
+    spots = Spot.query.order_by(Spot.id).all()
+    return jsonify([{"id": s.id, "name": s.name} for s in spots])
+
+
 @app.route("/admin/users", methods=["POST"])
 @require_admin
 def admin_create_user():

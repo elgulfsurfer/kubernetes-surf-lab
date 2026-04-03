@@ -59,7 +59,6 @@ surfapp/k8s/secret.yaml
 
 # ── Excluded project folders ──────────────────────────────────────────────────
 resume-app/
-k8s/
 app/
 terraform/
 

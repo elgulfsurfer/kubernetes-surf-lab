@@ -1,0 +1,3 @@
+## NOT USED - ALB requires ACM certificates, not cert-manager.
+## TLS is handled via ACM cert ARN in ingress.yaml annotation:
+## alb.ingress.kubernetes.io/certificate-arn
